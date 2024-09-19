@@ -1,0 +1,70 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block body %}
+{% include "navbar.html" %}
+<main class="bg-body-i-w">
+    <h1>Itens</h1>
+    <h2>Sala - C13</h2>
+
+    <div class="search-container">
+        <input class="input-itens" type="text" placeholder="Buscar...">
+        <button>
+            <span class="material-symbols-outlined" id="iconItens">edit</span>
+        </button>
+        <button>
+            <span class="material-symbols-outlined" id="iconItens">delete</span>
+        </button>
+        <button>
+            <span class="material-symbols-outlined" id="iconItens">filter_list</span>
+        </button>
+        <button class="add-button" onclick="openModal('modalAddItem')">
+            <span class="material-symbols-outlined" id="iconItens">add_circle</span>
+            <p class="add-text">Adicionar</p>
+        </button>
+    </div>
+
+    <div class="items-container">
+        {% for item in inventario %}
+        <div class="item-card">
+            <div class="bg-img">
+                <img src="{{ item.link_imagem }}" alt="{{ item.denominacao }}">
+            </div>
+            <div class="inf">
+                <h3>{{ item.denominacao }}</h3>
+                <p>{{ item.num_inventario }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="modalAddItem" class="modal">
+        <div class="modal-content">
+            <button type="button" class="btn-close" onclick="closeModal('modalAddItem')">X</button>
+            <h2>Adicionar Item</h2>
+            <form method="POST" action="{% url 'adicionar_inventario' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="modal-actions">
+                    <button type="submit" class="btn-add">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+
+</main>
+{% endblock %}
